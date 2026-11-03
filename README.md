@@ -1,13 +1,12 @@
 # PhotoMesh Studio
 
-**Source version 1.0.2** — offline engine compatibility checks, maintained global mapping, optional neural matching, and explicit GPS framing.
-Windows installers are published separately in Releases; check their version before downloading.
+Desktop photogrammetry software for Windows. It turns overlapping aerial photographs into 3D point clouds, textured meshes, orthomosaics, elevation models, and DXF contours. Processing runs on the local machine.
 
-Desktop photogrammetry software for turning overlapping aerial photographs into
-3D point clouds, textured meshes, orthomosaics, elevation models, and DXF contours.
+**Source version 1.0.2.** Windows installers are published separately. Check the installer version before downloading.
 
-**[Download for Windows](https://github.com/behdad-nayyerpour/Desktop-PhotoMesh-Studio/releases/latest)** ·
-[User guide](docs/user-guide.md) · [Installation](docs/installation.md) ·
+[Download for Windows](https://github.com/behdad-nayyerpour/Desktop-PhotoMesh-Studio/releases/latest) ·
+[User guide](docs/user-guide.md) ·
+[Installation](docs/installation.md) ·
 [Changelog](CHANGES.md) ·
 [Report a problem](https://github.com/behdad-nayyerpour/Desktop-PhotoMesh-Studio/issues/new?template=bug_report.md)
 
@@ -15,51 +14,71 @@ Desktop photogrammetry software for turning overlapping aerial photographs into
 
 **Dark theme**
 
-![PhotoMesh Studio 1.0.1 displaying a reconstructed aerial survey in dark mode](screenshot.png)
+![PhotoMesh Studio in the dark theme, showing a reconstructed aerial survey](screenshot.png)
 
 **Light theme**
 
-![PhotoMesh Studio 1.0.1 displaying a reconstructed aerial survey in light mode](screenshot-light.png)
+![PhotoMesh Studio in the light theme, showing a reconstructed aerial survey](screenshot-light.png)
+
+## Features
+
+- Photo alignment with COLMAP, the maintained integrated global mapper, and a legacy-engine fallback.
+- Optional offline SIFT/LightGlue or ALIKED/LightGlue matching. SIFT remains the default.
+- Dense point clouds, filtering, meshes, textures, and tiled 3D models.
+- Ground control points, check points, camera optimization, and error reports.
+- Orthomosaic and DEM generation, with georeferenced raster export.
+- Mesh contour export to DXF, on `minor` and `major` layers.
+- Import and export of survey shapes, plus point clouds and meshes as PLY or DXF. Textured meshes can also be written as OBJ or glTF.
+- Local processing after installation, including while the computer is offline.
+
+Dense reconstruction from depth maps requires an NVIDIA GPU and a compatible CUDA build of COLMAP. Alignment, and mesh generation from an existing point cloud, can run on the CPU. The 3D viewer requires an OpenGL-capable driver.
+
+## Requirements
+
+| | |
+|---|---|
+| Operating system | Windows 10 or 11, 64-bit, for the distributed installer |
+| Dense reconstruction | NVIDIA GPU, a compatible driver, and a CUDA-enabled COLMAP build |
+| CPU processing | Alignment and meshing from existing points can run without CUDA |
+| 3D display | OpenGL-capable graphics driver |
+| Memory | 16 GB is a practical starting point; large surveys may need 32 GB or more |
+| Storage | Room for the application, source photos, and processing data. Dense maps can require tens or hundreds of GB |
+
+Memory and disk use depend on photo count, resolution, quality, and the products you build. See [installation and requirements](docs/installation.md).
 
 ## Install
 
-Download `PhotoMeshStudio_Setup_<version>.exe` from
-[Releases](https://github.com/behdad-nayyerpour/Desktop-PhotoMesh-Studio/releases/latest)
-and run it. The offline installer includes Python, its required packages, COLMAP,
-and optional legacy GLOMAP; a separate Python or Git installation is not needed.
+1. Download `PhotoMeshStudio_Setup_<version>.exe` from [Releases](https://github.com/behdad-nayyerpour/Desktop-PhotoMesh-Studio/releases/latest).
+2. Run Setup. The offline installer includes Python, its required packages, COLMAP, and legacy GLOMAP.
+3. Start PhotoMesh Studio from the Start menu or desktop shortcut.
 
-For a later version, close PhotoMesh Studio and run the newer Setup over the
-existing installation. There is no separate Update EXE.
-Keep projects, processing results, and original photos outside the installation folder.
-See [installation and requirements](docs/installation.md) and [updating](UPDATING.md).
+To install a later version, close PhotoMesh Studio and run the newer Setup over the existing installation. Keep projects, processing results, and original photos outside the installation folder.
 
-## Main features
-
-- Photo alignment with COLMAP, integrated global mapping, and legacy-engine fallback.
-- Optional offline SIFT/LightGlue or ALIKED/LightGlue matching; SIFT remains the default.
-- Dense point clouds, filtering, meshes, textures, and tiled 3D models.
-- Ground control and check points, camera optimization, and error reports.
-- Orthomosaic and DEM generation with georeferenced raster export.
-- Mesh contour export to DXF with `minor` and `major` layers.
-- Import and export of survey shapes and common 3D formats.
-- Local processing without a cloud service.
-
-Dense reconstruction from depth maps requires an NVIDIA GPU and a compatible
-CUDA build of COLMAP. Alignment and mesh generation from existing point clouds
-can run on the CPU. The 3D viewer requires an OpenGL-capable driver.
+See [installation and requirements](docs/installation.md) and [updating](UPDATING.md). A matching `.exe.sha256` file checks download integrity. The installer is not code signed.
 
 ## Quick start
 
 1. Save a new project outside the application installation folder.
 2. Choose **Workflow > Add Photos...** or **Add Folder...**.
 3. Run **Align Photos...**, then inspect the cameras and tie points.
-4. Add ground control and optimize cameras when required.
-5. Run **Build Point Cloud...**, **Build Model...**, and the required texture,
-   DEM, or orthomosaic steps.
-6. Use **File > Export** to save your deliverables.
+4. Add ground control and optimize cameras when the survey requires it.
+5. Run **Build Point Cloud...**, **Build Model...**, and any texture, DEM, or orthomosaic step you need.
+6. Use **File > Export** to save the deliverables.
 
-For settings, marker editing, rebuilding after camera optimization, and contours,
-see the [user guide](docs/user-guide.md).
+Settings, marker editing, rebuilding after camera optimization, and contours are in the [user guide](docs/user-guide.md).
+
+## Run from source
+
+Source setup is for development. It needs a compatible Python, Git, and a separate COLMAP installation. Installing Python packages requires internet access. Dense stereo still needs a CUDA build of COLMAP and an NVIDIA GPU.
+
+On Windows, from a clone of this repository:
+
+```powershell
+.\setup.bat
+.\run.bat
+```
+
+Select COLMAP under **Tools > Preferences > Advanced**, add it to `PATH`, or place it in `tools\colmap`. GLOMAP is optional. Commands, tests, and the repository map are in the [development guide](docs/development/README.md).
 
 ## Documentation
 
@@ -74,13 +93,8 @@ see the [user guide](docs/user-guide.md).
 | Build the Windows installer | [Release guide](packaging/RELEASE.md) |
 | Review changes by version | [Changelog](CHANGES.md) |
 
-
 ## Project
 
-PhotoMesh Studio is built with Python, PySide6, and pyqtgraph. Reconstruction uses
-[COLMAP](https://colmap.github.io/) and
-[GLOMAP](https://github.com/colmap/glomap), with the project's own `fastpipe` pipeline.
+PhotoMesh Studio is built with Python, PySide6, and pyqtgraph. Reconstruction uses [COLMAP](https://colmap.github.io/) and legacy [GLOMAP](https://github.com/colmap/glomap), together with the project's `fastpipe` pipeline.
 
-The interface follows publicly documented photogrammetry workflows.
-PhotoMesh Studio is an independent project and is not affiliated with Agisoft.
-See [project notes and third-party components](docs/development/project-notes.md).
+The interface follows publicly documented photogrammetry workflows. PhotoMesh Studio is an independent project and is not affiliated with Agisoft. See [project notes and third-party components](docs/development/project-notes.md).
